@@ -3,10 +3,11 @@ name := "salesforce-spark-connector"
 version := "1.0"
 
 scalaVersion := "2.11.4"
+val sparkVersion = "2.4.4"
 
-
-libraryDependencies ++= Seq ("org.apache.spark" %% "spark-streaming" % "2.4.4" % "provided",
-                             "org.apache.spark" %% "spark-core" % "2.4.4" % "provided")
+libraryDependencies ++= Seq ("org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
+                             "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+                             "com.pontusvision.salesforce" % "emp-connector" % "0.0.2")
 
 //unmanagedJars in Compile += file(Path.userHome + "/files/libs/amps/amps_client.jar")
 

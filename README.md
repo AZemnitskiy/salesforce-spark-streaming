@@ -1,43 +1,74 @@
-# Spark Connector for Salesforce Streaming API
-This is a sample Apache Spark receiver for AMPS messaging bus written in Scala.
+# Spark Receiver for Salesforce Streaming API
+This is an Apache Spark Streaming receiver for Salesforce CometD API
 
-## Usage
-Receiver connects to local instance of Spark and remote AMPS instance and start publishing word count statistics inside AMPS messages every second.
-
-It takes two command line arguments (see code for more configuration options):
-
-__AMPSSparkReceiver "AMPS server" "AMPS topic"__
-
-
-
-### Example
-
-Use AMPS command line utility to publish a few mmesages:
+## Salesforce Topics
+### Platform event
+/event/EventName__e
+### Change Data Capture event
+- For all change events
 ```
-spark publish -server 34.201.116.96:9007 -type json -topic test
-
-hi
-friend
-friend
-
+/data/ChangeEvents
 ```
 
-On the receiver end, receiver will print statistics gathered in Spark:
+- For a specific standard object
+```
+/data/ObjectNameChangeEvent
+```
+
+- For a specific custom object
+```
+/data/CustomObjectName__ChangeEvent
+```
+
+### PushTopic event
+```
+/topic/PushTopicName
+```
+e.g.
+```
+/topic/InvoiceStatementUpdates
+```
+### Generic event
+```
+/u/notifications/GenericStreamingChannel
+```
+
+## PushTopic Subscription Test
+- Create a new object in Salesforce Object Manager or reference an existing object in the code example below 
+
+- Create push topic located at /topic/InvoiceStatementUpdates in Salesforce Developer Console (Apex code below)
+```
+PushTopic pushTopic = new PushTopic();
+pushTopic.Name = 'InvoiceStatementUpdates';
+pushTopic.Query = 'SELECT Id, Name, Status__c FROM Invoice_Statement__c';
+pushTopic.ApiVersion = 49.0;
+pushTopic.NotifyForOperationCreate = true;
+pushTopic.NotifyForOperationUpdate = true;
+pushTopic.NotifyForOperationUndelete = true;
+pushTopic.NotifyForOperationDelete = true;
+pushTopic.NotifyForFields = 'Referenced';
+insert pushTopic;
+```
+
+- Subscribe to updates for a push topic on the client side
+``` 
+SampleProgram https://login.salesforce.com [username] [password] /topic/InvoiceStatementUpdates
+```
+
+- Create an in-memory object and insert it to database via Salesforce Developer Console (Apex code below)
+```
+Invoice_Statement__c myCustomObject = new Invoice_Statement__c (
+Status__c = 'Closed'
+);
+
+insert myCustomObject;
+```
+
+- Monitor client output for new messages, e.g.:
 
 ```
-AMPSSparkReceiver "tcp://34.201.116.96:9007/amps/json" "test"
-
-
-Time: 1515903440000 ms
--------------------------------------------
-(hi,1)
-(friend,2)
-
--------------------------------------------
-Time: 1515903441000 ms
--------------------------------------------
-
--------------------------------------------
-Time: 1515903442000 ms
--------------------------------------------
+<<<<
+Received:
+{"event":{"createdDate":"2020-10-12T11:41:17.703Z","replayId":2,"type":"created"},"sobject":{"Id":"a003g0000025N4qAAE","Status__c":"Closed","Name":"INV-0002"}}
+>>>>
 ```
