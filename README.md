@@ -1,41 +1,6 @@
 # Spark Streaming Receiver for Salesforce CometD API
 This is a basic Apache Spark Streaming receiver for Salesforce CometD API
 
-## Salesforce Topics
-### Platform event
-```
-/event/EventName__e
-```
-
-### Change Data Capture event
-- For all change events
-```
-/data/ChangeEvents
-```
-
-- For a specific standard object
-```
-/data/ObjectNameChangeEvent
-```
-
-- For a specific custom object
-```
-/data/CustomObjectName__ChangeEvent
-```
-
-### PushTopic event
-```
-/topic/PushTopicName
-```
-e.g.
-```
-/topic/InvoiceStatementUpdates
-```
-### Generic event
-```
-/u/notifications/GenericStreamingChannel
-```
-
 ## PushTopic Subscription Test
 - Create a new object in Salesforce Object Manager or reference an existing object in the code example below 
 
@@ -74,4 +39,39 @@ insert myCustomObject;
 Received:
 {"event":{"createdDate":"2020-10-12T11:41:17.703Z","replayId":2,"type":"created"},"sobject":{"Id":"a003g0000025N4qAAE","Status__c":"Closed","Name":"INV-0002"}}
 >>>>
+```
+
+## Salesforce Topics
+### Platform event
+```
+/event/EventName__e
+```
+
+### Change Data Capture event
+- For all change events
+```
+/data/ChangeEvents
+```
+
+- For a specific standard object
+```
+/data/ObjectNameChangeEvent
+```
+
+- For a specific custom object
+```
+/data/CustomObjectName__ChangeEvent
+```
+
+### PushTopic event
+```
+/topic/PushTopicName
+```
+e.g.
+```
+/topic/InvoiceStatementUpdates
+```
+### Generic event
+```
+/u/notifications/GenericStreamingChannel
 ```
