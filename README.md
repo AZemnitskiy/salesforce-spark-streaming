@@ -1,9 +1,12 @@
-# Spark Receiver for Salesforce Streaming API
-This is an Apache Spark Streaming receiver for Salesforce CometD API
+# Spark Streaming Receiver for Salesforce CometD API
+This is a basic Apache Spark Streaming receiver for Salesforce CometD API
 
 ## Salesforce Topics
 ### Platform event
+```
 /event/EventName__e
+```
+
 ### Change Data Capture event
 - For all change events
 ```
